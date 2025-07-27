@@ -1,2 +1,3 @@
-# SimpleWinCoreUtils
+# SimpleWinUtils
+
 Simple Windows Commands Utils 

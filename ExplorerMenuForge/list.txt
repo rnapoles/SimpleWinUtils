@@ -1,0 +1,22 @@
+C:\Programas\dev\AI\cursor\Cursor.exe
+C:\Programas\dev\jetbrain\Goland\bin\goland64.exe
+C:\Programas\dev\jetbrain\WebStorm\bin\webstorm64.exe
+C:\Programas\dev\jetbrain\CLion\bin\clion64.exe
+C:\Programas\dev\jetbrain\IdeaIU\bin\idea64.exe
+C:\Programas\dev\jetbrain\PHPStorm\bin\phpstorm64.exe
+C:\Programas\dev\AI\cursor\Cursor.exe
+C:\Programas\dev\AI\Trae\Trae.exe
+C:\Programas\editors\Notepad++\notepad++.exe
+C:\Programas\editors\SublimeText3\sublime_text.exe
+C:\Programas\editors\SynWrite\syn.exe
+C:\Programas\editors\VsCode\Code.exe
+#bat.exe
+#
+C:\Programas\dev\AI\cursor\Cursor.exe
+C:\Programas\ide\Kiro\Kiro.exe
+C:\Programas\ide\Trae\Trae.exe
+C:\Programas\ide\PhpStorm-2024.2.4\bin\phpstorm64.exe
+C:\Programas\dev\editors\Notepad++\notepad++.exe
+C:\Programas\dev\editors\Sublime Text 3\sublime_text.exe
+C:\Programas\dev\editors\SynWrite\Syn.exe
+C:\Programas\dev\editors\VSCode-1.27.2\Code.exe
