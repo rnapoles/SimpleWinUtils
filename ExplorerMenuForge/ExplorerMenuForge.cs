@@ -1,13 +1,24 @@
+// csc /langversion:5 ExplorerMenuForge.cs ArgumentParser.cs
+
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Globalization;
 
 namespace ExplorerMenuForge
 {
-    class Program
+
+    class FileInfo
+    {
+        public string FileVersion { get; set; }
+        public string FileDescription { get; set; }
+    }
+
+    public class Program
     {
         // Maximum number of entries per registry file
         const int MAX_ENTRIES_PER_FILE = 16;
@@ -47,6 +58,12 @@ namespace ExplorerMenuForge
                 menuPrefix = parser.GetOptionValue("-n");
             }
 
+            var regFileName = ToKebabCase(menuPrefix);
+            if(!IsKebabCase(regFileName)){
+                Console.WriteLine(string.Format("Error: Invalid '{0}' menu name.", menuPrefix));
+                return;
+            }
+            
             // Get menu caption
             string menuCaption = DEFAULT_MENU_CAPTION;
             if (parser.HasOption("-c"))
@@ -100,9 +117,9 @@ namespace ExplorerMenuForge
             for (int i = 0; i < pathChunks.Count; i++)
             {
                 string outputPath = pathChunks.Count == 1 
-                    ? "context-menu.reg" 
-                    : string.Format("context-menu-{0}.reg", i + 1);
-                
+                    ? regFileName + ".reg" 
+                    : string.Format("{0}-{1}.reg", regFileName, i + 1);
+
                 // Use the file number (i+1) for the menu identifier
                 string menuId = pathChunks.Count == 1 ? menuPrefix + "1" : string.Format("{0}{1}", menuPrefix, i + 1);
                 
@@ -113,7 +130,7 @@ namespace ExplorerMenuForge
             }
 
             // Generate removal script
-            GenerateRemovalScript(pathChunks.Count, menuPrefix);
+            GenerateRemovalScript(pathChunks.Count, menuPrefix, regFileName);
         }
 
         static void ShowUsage()
@@ -149,7 +166,7 @@ namespace ExplorerMenuForge
         /// <summary>
         /// Generates a batch file to remove all registry keys created by this tool
         /// </summary>
-        static void GenerateRemovalScript(int numFiles, string menuPrefix)
+        static void GenerateRemovalScript(int numFiles, string menuPrefix, string basename)
         {
             StringBuilder sb = new StringBuilder();
             
@@ -188,7 +205,7 @@ namespace ExplorerMenuForge
             //sb.AppendLine("pause");
             
             // Write to file
-            string outputPath = "remove-context-menu.bat";
+            string outputPath = string.Format("remove-{0}.bat", basename);
             File.WriteAllText(outputPath, sb.ToString());
             
             Console.WriteLine(string.Format("Removal script generated successfully: {0}", Path.GetFullPath(outputPath)));
@@ -244,6 +261,14 @@ namespace ExplorerMenuForge
                 // Get Full path
                 string fullPath = Path.GetFullPath(path);
 
+                var info = GetExecutableInfo(fullPath);
+                Console.WriteLine("Version: {0}", info.FileVersion);
+                Console.WriteLine("Description: {0}", info.FileDescription);
+                
+                if(!string.IsNullOrEmpty(info.FileDescription)){
+                  appName = info.FileDescription;
+                }
+
                 // Escape backslashes for registry format
                 string escapedPath = fullPath.Replace("\\", "\\\\");
 
@@ -260,6 +285,37 @@ namespace ExplorerMenuForge
             }
 
             return sb.ToString();
+        }
+
+        static string ToKebabCase(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            // Step 1: Replace underscores with spaces
+            string result = input.Replace('_', ' ');
+            
+            // Step 2: Insert space before uppercase letters that follow lowercase letters
+            // This handles camelCase and PascalCase
+            result = Regex.Replace(result, @"([a-z])([A-Z])", "$1 $2");
+            
+            // Step 3: Replace multiple spaces with single space and trim
+            result = Regex.Replace(result.Trim(), @"\s+", " ");
+            
+            // Step 4: Convert to lowercase and replace spaces with hyphens
+            result = result.ToLower().Replace(' ', '-');
+            
+            return result;
+        }
+
+        static bool IsKebabCase(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+                
+            // Kebab-case pattern: lowercase letters, numbers, and hyphens only
+            // Must start and end with alphanumeric, no consecutive hyphens
+            return Regex.IsMatch(input, @"^[a-z0-9]+(-[a-z0-9]+)*$");
         }
 
         /// <summary>
@@ -316,6 +372,30 @@ namespace ExplorerMenuForge
 
             // If not found in PATH, return the original
             return executablePath;
+        }
+        
+        static FileInfo GetExecutableInfo(string exePath)
+        {
+            if (string.IsNullOrEmpty(exePath))
+                throw new ArgumentException("File path cannot be null or empty", "exePath");
+            
+            if (!File.Exists(exePath))
+                throw new FileNotFoundException(string.Format("File not found: {0}", exePath));
+            
+            try
+            {
+                FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(exePath);
+                
+                return new FileInfo
+                {
+                    FileVersion = versionInfo.FileVersion ?? string.Empty,
+                    FileDescription = versionInfo.FileDescription ?? string.Empty
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(string.Format("Error reading file version info: {0}", ex.Message), ex);
+            }
         }
     }
 }

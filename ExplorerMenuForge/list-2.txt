@@ -1,3 +1,4 @@
+#ExplorerMenuForge.exe -f list.txt -c "Edit with"
 C:\Programas\dev\AI\cursor\Cursor.exe
 C:\Programas\dev\jetbrain\Goland\bin\goland64.exe
 C:\Programas\dev\jetbrain\WebStorm\bin\webstorm64.exe
@@ -20,3 +21,4 @@ C:\Programas\dev\editors\Notepad++\notepad++.exe
 C:\Programas\dev\editors\Sublime Text 3\sublime_text.exe
 C:\Programas\dev\editors\SynWrite\Syn.exe
 C:\Programas\dev\editors\VSCode-1.27.2\Code.exe
+C:\Programas\ide\android-studio\bin\studio64.exe

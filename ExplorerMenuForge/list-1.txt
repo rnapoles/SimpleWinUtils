@@ -1,0 +1,12 @@
+C:\Programas\dev\android\android-studio\bin\studio64.exe
+C:\Programas\dev\jetbrain\Goland\bin\goland64.exe
+C:\Programas\dev\jetbrain\WebStorm\bin\webstorm64.exe
+C:\Programas\dev\jetbrain\CLion\bin\clion64.exe
+C:\Programas\dev\jetbrain\IdeaIU\bin\idea64.exe
+C:\Programas\dev\jetbrain\PHPStorm\bin\phpstorm64.exe
+C:\Programas\dev\AI\cursor\Cursor.exe
+C:\Programas\dev\AI\Trae\Trae.exe
+C:\Programas\editors\Notepad++\notepad++.exe
+C:\Programas\editors\SublimeText3\sublime_text.exe
+C:\Programas\editors\SynWrite\syn.exe
+C:\Programas\editors\VsCode\Code.exe
